@@ -77,12 +77,13 @@ public class BlackHoleBoard {
     // This is the inverse of the method above.
     protected Coordinates indexToCoords(int i) {
         Coordinates result = null;
-        // TODO: Compute the column and row number for the ith location in the array.
+        // Compute the column and row number for the ith location in the array.
         // The row number is the triangular root of i as explained in wikipedia:
         // https://en.wikipedia.org/wiki/Triangular_number#Triangular_roots_and_tests_for_triangular_numbers
         // The column number is i - (the number of tiles in all the previous rows).
-        // This is tricky to compute correctly so use the unit test in BlackHoleBoardTest to get it
-        // right.
+        int row = (int) ((Math.sqrt(8.0*i + 1) - 1) / 2);
+        int col = i - row*(row + 1)/2;
+        result = new Coordinates(col, row);
         return result;
     }
 

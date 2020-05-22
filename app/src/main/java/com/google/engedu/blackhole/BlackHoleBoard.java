@@ -126,10 +126,59 @@ public class BlackHoleBoard {
 
     // Pick a good move for the computer to make. Returns the array index of the position to play.
     public int pickMove() {
-        // TODO: Implement this method have the computer make a move.
         // At first, we'll just invoke pickRandomMove (above) but later, you'll need to replace
         // it with an algorithm that uses the Monte Carlo method to pick a good move.
-        return pickRandomMove();
+        // return pickRandomMove();
+        BlackHoleBoard b = new BlackHoleBoard();
+        b.copyBoardState(this);
+        HashMap<Integer, ArrayList<Integer>> moveToScoreMap = new HashMap<>();
+        for (int reps = 0; reps < NUM_GAMES_TO_SIMULATE; ++reps) {
+            Log.d("BlackHole", "Running sim #" + reps);
+            int firstMove = 0;
+            // play a simulated, random game
+            while (! b.gameOver()) {
+                int move = b.pickRandomMove();
+                if (firstMove == 0) {
+                    firstMove = move;
+                }
+                b.setValue(move);
+            }
+
+            // Store the outcome from the simulated, random game
+            int score = b.getScore();
+            if (moveToScoreMap.containsKey(firstMove)) {
+                moveToScoreMap.get(firstMove).add(score);
+            } else {
+                ArrayList<Integer> scores = new ArrayList<>();
+                scores.add(score);
+                moveToScoreMap.put(firstMove, scores);
+            }
+
+            // Reset the board
+            b.copyBoardState(this);
+        }
+
+        // Calculate the highest average score based on move
+        int bestAvgScore = 0;
+        int bestAvgScoreMove = 0;
+        for (Map.Entry<Integer, ArrayList<Integer>> entry : moveToScoreMap.entrySet()) {
+            int sumScores = 0;
+            int numScores = 0;
+            int avgScore = 0;
+            ArrayList<Integer> scores = entry.getValue();
+            for (int idx = 0; idx < scores.size(); ++idx) {
+                sumScores += scores.get(idx);
+                ++numScores;
+            }
+            avgScore = sumScores / numScores;
+
+            if (avgScore > bestAvgScore) {
+                bestAvgScore = avgScore;
+                bestAvgScoreMove = entry.getKey();
+            }
+        }
+
+        return bestAvgScoreMove;
     }
 
     // Makes the next move on the board at position i. Automatically updates the current player.

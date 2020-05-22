@@ -19,6 +19,7 @@ import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Random;
 
@@ -145,9 +146,22 @@ public class BlackHoleBoard {
      */
     public int getScore() {
         int score = 0;
-        // TODO: Implement this method to compute the final score for a given board.
-        // Find the empty tile left on the board then add/substract the values of all the
-        // surrounding tiles depending on who the tile belongs to.
+
+        if (gameOver()) {
+            // Find the empty tile left on the board then add/substract the values of all the
+            // surrounding tiles depending on who the tile belongs to.
+            int emptyTileIdx = 0;
+            for (; emptyTileIdx < BOARD_SIZE; ++emptyTileIdx) {
+                if (tiles[emptyTileIdx] == null) {
+                    break;
+                }
+            }
+            ArrayList<BlackHoleTile> neighbors = getNeighbors(indexToCoords(emptyTileIdx));
+            Iterator iter = neighbors.iterator();
+            while (iter.hasNext()) {
+                score += ((BlackHoleTile) iter.next()).value;
+            }
+        }
         return score;
     }
 

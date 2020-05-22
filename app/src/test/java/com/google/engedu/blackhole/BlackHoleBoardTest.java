@@ -49,6 +49,18 @@ public class BlackHoleBoardTest {
 
     @Test
     public void testGetScore() {
-        // TODO: Implement this test to verify that your getScore method is working.
+        BlackHoleBoard b = new BlackHoleBoard();
+        assertEquals(0, b.getScore());
+
+        int emptyTileIdx = 8;
+        int idx = 0;
+        while (idx < BlackHoleBoard.BOARD_SIZE) {
+            if (idx != emptyTileIdx) {
+                b.setValue(idx);
+            }
+            ++idx;
+        }
+        int score = b.getScore();
+        assertEquals(28, score);
     }
 }
